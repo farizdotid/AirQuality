@@ -1,12 +1,9 @@
- <div class="flex items-center justify-center min-h-screen bg-green-100 ">
-    <h1 class="text-2xl font-bold text-gray-800">Air Quality in Bandung</h1>
-
-    <% if @data %>
-      <p class="mt-4 text-lg">AQI (US Standard): <span class="font-bold text-green-600"><%= @data["location"]["aqius"] %></span></p>
-      <p class="mt-2 text-gray-500">Source: <a href="<%= @data["location"]["sourceUrl"] %>" class="text-blue-500 underline" target="_blank"><%= @data["location"]["source"] %></a></p>
-    <% elsif @error %>
-      <p class="mt-4 text-red-600"><%= @error %></p>
-    <% else %>
-      <p class="mt-4 text-gray-600 animate-pulse">Loading...</p>
-    <% end %>
+<%= turbo_frame_tag "air_quality_data", src: air_quality_path(format: :turbo_stream) do %>
+  <div class="min-h-screen flex flex-col items-center justify-center space-x-2">
+    <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+    </svg>
+    <p class="text-gray-700">Loading air quality data...</p>
   </div>
+<% end %>

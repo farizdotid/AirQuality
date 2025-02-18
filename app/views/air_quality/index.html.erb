@@ -1,0 +1,12 @@
+ <div class="flex items-center justify-center min-h-screen bg-green-100 ">
+    <h1 class="text-2xl font-bold text-gray-800">Air Quality in Bandung</h1>
+
+    <% if @data %>
+      <p class="mt-4 text-lg">AQI (US Standard): <span class="font-bold text-green-600"><%= @data["location"]["aqius"] %></span></p>
+      <p class="mt-2 text-gray-500">Source: <a href="<%= @data["location"]["sourceUrl"] %>" class="text-blue-500 underline" target="_blank"><%= @data["location"]["source"] %></a></p>
+    <% elsif @error %>
+      <p class="mt-4 text-red-600"><%= @error %></p>
+    <% else %>
+      <p class="mt-4 text-gray-600 animate-pulse">Loading...</p>
+    <% end %>
+  </div>

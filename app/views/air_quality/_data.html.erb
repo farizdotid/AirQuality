@@ -2,12 +2,14 @@
   <p class="mt-4 text-red-500 font-bold"><%= error %></p>
 <% else %>
   <div class="min-h-screen flex flex-col items-center justify-center <%= bgColor %> p-6">
-    <div class=" bg-white shadow-md rounded-lg p-6 text-center">
-      <p class="text-sm">📍 <span class="font-semibold"><%= data["location"]["cityName"] %></span></p>
+    <div class=" bg-white shadow-md rounded-xl p-6 text-center">
+      <p class="text-sm">📍 <span class="font-semibold"><%= data["location"]["cityName"] %>, <%= data["location"]["stateName"] %>, <%= data["location"]["countryName"] %></span></p>
       <p class="font-semibold text-8xl mt-4 mb-4"><%= data["location"]["aqius"] %></p>
       <p class="text-sm">Air Quality Index (US Standard)</p>
+      <p class="text-xs text-right mt-4"><%= data["location"]["timeStamp"] %></p>
     </div>
-    <div class="mt-2 bg-white shadow-md rounded-lg p-6">
+
+    <div class="mt-2 bg-white shadow-md rounded-lg p-6 w-full max-w-screen-md">
       <p class="text-sm">Level of Concern: <span class="font-semibold text-lg underline"><%= levelStatus %></span></p>
       <p class="text-sm">Description of Air Quality: <span class="font-semibold text-lg"><%= description %></span></p>
       <p class="mt-4 text-xs text-right">
@@ -15,6 +17,22 @@
         <a href="<%= data["location"]["sourceUrl"] %>" class="font-semibold text-xs text-blue-500 underline" target="_blank">
           <%= data["location"]["source"] %>
         </a>
+      </p>
+    </div>
+
+    <div class="mt-2 bg-white shadow-md rounded-lg p-6 w-full max-w-screen-md">
+      <h3 class="text-sm font-bold mb-2">AQI Basics for Ozone and Particle Pollution</h3>
+      <ul class="space-y-2">
+        <% aqiLevels.each do |level| %>
+          <li class="p-2 rounded-lg <%= level[:color] %> text-white text-sm">
+            <span class="font-semibold"><%= level[:status] %></span> 
+            (<%= level[:index] %>) - <%= level[:description] %>
+          </li>
+        <% end %>
+      </ul>
+      <p class="mt-4 text-xs text-right">
+        Source: 
+        <a href="https://www.airnow.gov/aqi/aqi-basics/" class="font-semibold text-xs text-blue-500 underline" target="_blank">airnow.gov</a>
       </p>
     </div>
   </div>

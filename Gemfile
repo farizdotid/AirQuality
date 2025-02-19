@@ -57,3 +57,6 @@ group :test do
 end
 
 gem "httparty"
+gem "pg"
+
+ruby "3.3.7"

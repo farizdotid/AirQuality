@@ -15,25 +15,31 @@ class AirQualityController < ApplicationController
         if response.success?
           @data = response.parsed_response["data"]
           @aqius = @data["location"]["aqius"]
-          if @aqius <= 50
-            @bg_color = "bg-green-400"
-          elsif @aqius >= 51 && @aqius <= 100
-            @bg_color = "bg-yellow-400"
-          elsif @aqius >= 101 && @aqius <= 150
-            @bg_color = "bg-orange-400"
-          elsif @aqius >= 151 && @aqius <= 200
-            @bg_color = "bg-red-400"
-          elsif @aqius >= 201 && @aqius <= 300
-            @bg_color = "bg-purple-400"
-          elsif @aqius >= 301 && @aqius <= 500
-            @bg_color = "bg-rose-700"
-          end
+          aqi_levels = [
+            { range: 0..50, color: "bg-green-400", status: "Good", index: "0 to 50", description: "Air quality is satisfactory, and air pollution poses little or no risk." },
+            { range: 51..100, color: "bg-yellow-400", status: "Moderate", index: "51 to 100", description: "Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution." },
+            { range: 101..150, color: "bg-orange-400", status: "Unhealthy for Sensitive Groups", index: "101 to 150", description: "Members of sensitive groups may experience health effects. The general public is less likely to be affected." },
+            { range: 151..200, color: "bg-red-400", status: "Unhealthy", index: "151 to 200", description: "Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects." },
+            { range: 201..300, color: "bg-purple-400", status: "Very Unhealthy", index: "201 to 300", description: "Health alert: The risk of health effects is increased for everyone." },
+            { range: 301..500, color: "bg-rose-700", status: "Hazardous", index: "301 and higher", description: "Health warning of emergency conditions: everyone is more likely to be affected." }
+          ]
+          selected_level = aqi_levels.find { |level| level[:range].include?(@aqius) } || aqi_levels.last
+          @bg_color = selected_level[:color]
+          @level_status = selected_level[:status]
+          @value_of_index = selected_level[:index]
+          @description = selected_level[:description]
         else
           @error = "Failed to fetch air quality data."
         end
-
+        # Render the Turbo Stream response
         render turbo_stream: turbo_stream.replace("air_quality_data", partial: "air_quality/data", locals: {
-          data: @data, bgColor: @bg_color, error: @error })
+          data: @data,
+          bgColor: @bg_color,
+          levelStatus: @level_status,
+          valueOfIndex: @value_of_index,
+          description: @description,
+          error: @error
+        })
       end
     end
   end
